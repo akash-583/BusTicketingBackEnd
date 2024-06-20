@@ -1,19 +1,29 @@
 pipeline {
     agent any
+    
+    tools {
+        // Define the Maven tool installation name as configured in Jenkins Global Tool Configuration
+        maven 'Maven_Installation_Name'
+        // Define the Git tool installation name as configured in Jenkins Global Tool Configuration
+        git 'Git_Installation_Name'
+    }
 
     environment {
         DEPLOY_DIR = "${WORKSPACE}/deployments"
     }
 
     stages {
-        stage('Prepare Deployment Directory') {
+        stage('Checkout') {
             steps {
-                script {
-                    sh "mkdir -p ${DEPLOY_DIR}"
-                }
+                cleanWs()
+                // Checkout the Git repository
+                checkout([$class: 'GitSCM', 
+                    branches: [[name: 'master']], 
+                    userRemoteConfigs: [[url: 'https://github.com/akash-583/BusTicketingBackEnd.git']]
+                ])
             }
         }
-
+        
         stage('Build and Test Microservices') {
             parallel {
                 stage('apigateway') {
@@ -88,6 +98,14 @@ pipeline {
                         }
                     }
                 }
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                // Example deployment step
+                echo 'Deploying...'
+                // Add your deployment script or commands here
             }
         }
     }
