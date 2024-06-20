@@ -1,0 +1,5 @@
+package com.bus.booking_service.controller;
+
+public class BookingController {
+
+}

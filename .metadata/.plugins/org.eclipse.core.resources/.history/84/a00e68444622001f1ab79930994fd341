@@ -1,0 +1,38 @@
+package com.bus.booking_service.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.bus.booking_service.model.BookingModel;
+import com.bus.booking_service.service.BookingService;
+
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
+@RestController
+@RequestMapping("/bookings")
+public class BookingController {
+	@Autowired
+	private BookingService bookingService;
+	
+	@PostMapping("/booking")
+	public ResponseEntity<BookingModel> bookTicket(@Valid @RequestBody BookingModel booking) {
+		log.info("Inside the bookTicket method of Controller");
+		log.info("Booking A Ticket "+booking);
+		return ResponseEntity.ok(bookingService.bookTicket(booking));
+	}
+	
+	 @DeleteMapping("/deleteTicket/{ticketNo}")
+	    public ResponseEntity<String> cancelTicket(@PathVariable String ticketNo) {
+		 log.info("Inside the cancelTicket method of Controller");
+		 log.info("cancelling A Ticket successlly ");
+		 return ResponseEntity.ok(bookingService.cancelTicket(ticketNo));
+	 }
+}
